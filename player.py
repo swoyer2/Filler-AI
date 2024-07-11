@@ -9,7 +9,7 @@ class Player:
     
     def findPlayerPositions(self, board):
         toCheck = []
-        for i in range(len(board.board[0])):
+        for i in range(len(board.board[0])-1):
             for j in range(len(board.board[0])):
                 if board.board[i][j] == board.board[self.positionsControlled[0][0]][self.positionsControlled[0][1]]:
                     toCheck.append((i, j))

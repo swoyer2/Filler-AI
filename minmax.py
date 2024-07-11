@@ -1,6 +1,5 @@
 from board import Board
 from anytree import Node as AnyNode
-import copy
 import cProfile
 
 class MinMax:
@@ -15,7 +14,7 @@ class MinMax:
 
     def findPlayerPositions(self, board):
         player1 = set([(0, 7)])
-        player2 = set([(7, 0)])
+        player2 = set([(6, 0)])
 
         def helper(playerPositions):
             toCheck = set(playerPositions)
@@ -55,6 +54,10 @@ class MinMax:
                     board[pos[0]][pos[1]] = color
         if player1:
             positions = self.findPlayerPositions(board)
+            if len(positions[0]) > 28:
+                return 100
+            elif len(positions[1]) > 28:
+                return -100
             score = len(positions[0]) - len(positions[1])
             return score
 
@@ -93,21 +96,21 @@ class MinMax:
         return best_path, best_eval, best_path_colors
 
     def evaluate_tree(self, board, maxDepth):
-        root = AnyNode(name="Root", colors=[board.board[7][0], board.board[0][7]])
+        root = AnyNode(name="Root", colors=[board.board[6][0], board.board[0][7]])
         best_path, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, float('-inf'), float('inf'), True)
         return best_path_colors, best_score
 
-def main():
-    test = Board(8)
-    test.buildBoard()
-    testClass = MinMax(test)
+# def main():
+#     test = Board(8)
+#     test.buildBoard()
+#     testClass = MinMax(test)
 
-    print("Creating and Evaluating Tree")
+#     print("Creating and Evaluating Tree")
 
-    # Evaluate the tree using Minimax to find the best score
-    best_path_colors, best_score = testClass.evaluate_tree(test, 14)
-    print(f"Best moves found using Minimax were: {best_path_colors[0][2:]} with score of: {best_score}")
+#     # Evaluate the tree using Minimax to find the best score
+#     best_path_colors, best_score = testClass.evaluate_tree(test, 16)
+#     print(f"Best moves found using Minimax were: {best_path_colors[0][2:]} with score of: {best_score}")
 
-    test.printBoard()
+#     test.printBoard()
 
-cProfile.run("main()")
+# cProfile.run("main()")

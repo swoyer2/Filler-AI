@@ -4,7 +4,7 @@ import copy
 class Board:
     def __init__(self, size):
         self.size = size
-        self.board = [[None] * size for _ in range(size)]
+        self.board = [[None] * (size) for _ in range(size-1)]
         self.colors = None
     
     def printBoard(self):
@@ -35,7 +35,7 @@ class Board:
     
     def buildBoard(self):
         for y in range(self.size):
-            for x in range(self.size):
+            for x in range(self.size-1):
                 self.setColor((x,y))
 
     def getBoardCopy(self):

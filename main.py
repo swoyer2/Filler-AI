@@ -8,10 +8,10 @@ gameBoard = Board(boardSize)
 
 gameBoard.buildBoard()
 
-player1 = Player((boardSize-1 ,0))
+player1 = Player((boardSize-2 ,0))
 player2 = Player((0, boardSize-1))
 
-player1.color = gameBoard.board[boardSize-1][0]
+player1.color = gameBoard.board[boardSize-2][0]
 player2.color = gameBoard.board[0][boardSize-1]
 
 while True:
@@ -26,7 +26,9 @@ while True:
         
         minMaxClass = minmax.MinMax(gameBoard)
 
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 12)
+        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 8)
+        print(best_path_colors[0][2:])
+        print(best_score)
         player2.addPositionsWithColor(gameBoard, best_path_colors[0][2])
 
         print("Player1: ", len(player1.positionsControlled), " Player2: ", len(player2.positionsControlled))
