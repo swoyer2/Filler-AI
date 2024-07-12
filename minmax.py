@@ -2,6 +2,7 @@ from board import Board
 from anytree import Node as AnyNode
 import cProfile
 
+
 class MinMax:
     def __init__(self, gameBoard) -> None:
         self.gameBoard = gameBoard
@@ -100,17 +101,18 @@ class MinMax:
         best_path, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, float('-inf'), float('inf'), True)
         return best_path_colors, best_score
 
+
 # def main():
 #     test = Board(8)
 #     test.buildBoard()
 #     testClass = MinMax(test)
-
+#
 #     print("Creating and Evaluating Tree")
-
+#
 #     # Evaluate the tree using Minimax to find the best score
-#     best_path_colors, best_score = testClass.evaluate_tree(test, 16)
+#     best_path_colors, best_score = testClass.evaluate_tree(test, 12)
 #     print(f"Best moves found using Minimax were: {best_path_colors[0][2:]} with score of: {best_score}")
-
+#
 #     test.printBoard()
-
+#
 # cProfile.run("main()")

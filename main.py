@@ -1,37 +1,125 @@
+import pygame
 from board import Board
 from player import Player
 import minmax
+import pygame_widgets
+from pygame_widgets.button import ButtonArray
+import pygame.freetype
 
+# Initialize Pygame
+pygame.init()
+
+# Constants
 boardSize = 8
+cellSize = 50
+padding = 200
+buttonSize = 60
+windowSize = boardSize * cellSize + 2 * padding
+colors = [
+    (242, 39, 113),
+    (100, 70, 166),
+    (68, 193, 242),
+    (164, 217, 85),
+    (242, 208, 39),
+    (66, 64, 67)
+]
 
+pygame.font.init()
+GAME_FONT = pygame.freetype.SysFont('Comic Sans MS', 30)
+
+# Set up the display
+screen = pygame.display.set_mode((windowSize, windowSize))
+pygame.display.set_caption("Filler Engine")
+
+# Initialize the game board and players
 gameBoard = Board(boardSize)
-
 gameBoard.buildBoard()
 
-player1 = Player((boardSize-2 ,0))
-player2 = Player((0, boardSize-1))
+player1 = Player((boardSize - 2, 0))
+player2 = Player((0, boardSize - 1))
 
-player1.color = gameBoard.board[boardSize-2][0]
-player2.color = gameBoard.board[0][boardSize-1]
+player1.color = gameBoard.board[boardSize - 2][0]
+player2.color = gameBoard.board[0][boardSize - 1]
 
-while True:
-    gameBoard.printBoard()
-    playerInput = input()
+# Function to draw the board
+def draw_board():
+    global score1
+    global score2
+    for row in range(boardSize-1):
+        for col in range(boardSize):
+            color = colors[gameBoard.board[row][col]]
+            pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
-    if playerInput == 'x':
-        break
+    GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
+    GAME_FONT.render_to(screen, (480, 50), str(score1), colors[gameBoard.board[0][7]])
 
-    if playerInput in {'0', '1', '2', '3', '4', '5'} and int(playerInput) != gameBoard.board[0][7]:
-        player1.addPositionsWithColor(gameBoard, int(playerInput))
-        
+# Draw buttons
+buttonArray = ButtonArray(
+    # Mandatory Parameters
+    screen,  # Surface to place button array on
+    220,  # X-coordinate
+    650,  # Y-coordinate
+    buttonSize * 6,  # Width
+    buttonSize,  # Height
+    (6, 1),  # Shape: 2 buttons wide, 2 buttons tall
+    border=5,  # Distance between buttons and edge of array
+    texts=('1', '2', '3', '4', '5', '6'),  # Sets the texts of each button (counts left to right then top to bottom)
+    inactiveColours=(colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]),
+    colour = (255, 255, 255),
+    # When clicked, print number
+    onClicks=(lambda: handle_player_input(1),
+              lambda: handle_player_input(2),
+              lambda: handle_player_input(3),
+              lambda: handle_player_input(4),
+              lambda: handle_player_input(5),
+              lambda: handle_player_input(6))
+)
+
+
+# Function to handle player input
+def handle_player_input(playerInput):
+    global score1
+    global score2
+    playerInput -= 1
+    if playerInput != gameBoard.board[0][7] and playerInput != gameBoard.board[6][0]:
+        player1.addPositionsWithColor(gameBoard, playerInput)
+
         minMaxClass = minmax.MinMax(gameBoard)
+        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 10)
 
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 8)
         print(best_path_colors[0][2:])
         print(best_score)
+
         player2.addPositionsWithColor(gameBoard, best_path_colors[0][2])
 
         print("Player1: ", len(player1.positionsControlled), " Player2: ", len(player2.positionsControlled))
+        score1 = str(len(player1.positionsControlled))
+        score2 = str(len(player2.positionsControlled))
     else:
         print("Choose a valid color")
 
+
+# Main game loop
+running = True
+while running:
+    score1 = 1
+    score2 = 1
+    screen.fill((255, 255, 255))
+    draw_board()
+    events = pygame.event.get()
+    pygame_widgets.update(events)
+    for event in events:
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_x:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    running = False
+                elif pygame.K_1 <= event.key <= pygame.K_6:
+                    playerInput = event.key - pygame.K_0
+                    handle_player_input(playerInput)
+
+    pygame.display.flip()
+pygame.quit()
