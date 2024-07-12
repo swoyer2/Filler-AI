@@ -16,6 +16,7 @@ padding = 200
 buttonSize = 60
 score1 = 1
 score2 = 1
+evalScore = 0
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
     (242, 39, 113),
@@ -50,8 +51,19 @@ def draw_board():
             color = colors[gameBoard.board[row][col]]
             pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
+    # Score
     GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
     GAME_FONT.render_to(screen, (480, 50), str(score2), colors[gameBoard.board[0][7]])
+
+    # Eval bar
+    pygame.draw.rect(screen, colors[gameBoard.board[6][0]], (20, 150, 50, 450))
+    if evalScore > 10:
+        pygame.draw.rect(screen, colors[gameBoard.board[0][7]], (20, 150, 50, 450))
+    elif evalScore < -10:
+        pygame.draw.rect(screen, colors[gameBoard.board[0][7]], (20, 150, 50, 0))
+    else:
+        pygame.draw.rect(screen, colors[gameBoard.board[0][7]], (20, 150, 50, 225+22.5*evalScore))
+    
 
 # Draw buttons
 buttonArray = ButtonArray(
@@ -80,15 +92,17 @@ buttonArray = ButtonArray(
 def handle_player_input(playerInput):
     global score1
     global score2
+    global evalScore
     playerInput -= 1
     if playerInput != gameBoard.board[0][7] and playerInput != gameBoard.board[6][0]:
         player1.addPositionsWithColor(gameBoard, playerInput)
 
         minMaxClass = minmax.MinMax(gameBoard)
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 10)
+        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 12)
 
         print(best_path_colors[0][2:])
         print(best_score)
+        evalScore = best_score
 
         player2.addPositionsWithColor(gameBoard, best_path_colors[0][2])
 
