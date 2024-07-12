@@ -108,17 +108,17 @@ class MinMax:
         return best_path_colors, best_score
 
 
-def main():
-    test = Board(8)
-    test.buildBoard()
-    testClass = MinMax(test)
+# def main():
+#     test = Board(8)
+#     test.buildBoard()
+#     testClass = MinMax(test)
 
-    print("Creating and Evaluating Tree")
+#     print("Creating and Evaluating Tree")
 
-    # Evaluate the tree using Minimax to find the best score
-    best_path_colors, best_score = testClass.evaluate_tree(test, 12)
-    print(f"Best moves found using Minimax were: {best_path_colors[0][2:]} with score of: {best_score}")
+#     # Evaluate the tree using Minimax to find the best score
+#     best_path_colors, best_score = testClass.evaluate_tree(test, 12)
+#     print(f"Best moves found using Minimax were: {best_path_colors[0][2:]} with score of: {best_score}")
 
-    test.printBoard()
+#     test.printBoard()
 
-cProfile.run("main()")
+# cProfile.run("main()")

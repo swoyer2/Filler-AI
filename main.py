@@ -17,6 +17,7 @@ buttonSize = 60
 score1 = 1
 score2 = 1
 evalScore = 0
+selection = [0, 0]
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
     (242, 39, 113),
@@ -49,7 +50,11 @@ def draw_board():
     for row in range(boardSize-1):
         for col in range(boardSize):
             color = colors[gameBoard.board[row][col]]
-            pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
+            if selection == [col, row] and editing:
+                pygame.draw.rect(screen, (0, 0, 0), (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
+                pygame.draw.rect(screen, color, (col * cellSize + padding + 5, row * cellSize + padding + 5, cellSize - 10, cellSize - 10))
+            else:
+                pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
     # Score
     GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
@@ -114,6 +119,7 @@ def handle_player_input(playerInput):
 
 
 # Main game loop
+editing = False
 running = True
 while running:
     screen.fill((255, 255, 255))
@@ -126,10 +132,27 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_x:
-                    running = False
-                elif pygame.K_1 <= event.key <= pygame.K_6:
+            elif event.key == pygame.K_e:
+                if editing:
+                    editing = False
+                else:
+                    editing = True
+            elif event.key == pygame.K_LEFT and editing:
+                if selection[0] > 0:
+                    selection[0] -= 1
+            elif event.key == pygame.K_RIGHT and editing:
+                if selection[0] < 7:
+                    selection[0] += 1
+            elif event.key == pygame.K_UP and editing:
+                if selection[1] > 0:
+                    selection[1] -= 1
+            elif event.key == pygame.K_DOWN and editing:
+                if selection[1] < 6:
+                    selection[1] += 1
+            elif pygame.K_1 <= event.key <= pygame.K_6:
+                if editing:
+                    gameBoard.board[selection[1]][selection[0]] = event.key - pygame.K_0 - 1
+                else:
                     playerInput = event.key - pygame.K_0
                     handle_player_input(playerInput)
 
