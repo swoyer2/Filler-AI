@@ -56,9 +56,9 @@ class MinMax:
         if player1:
             positions = self.findPlayerPositions(board)
             if len(positions[0]) > 28:
-                return 100
+                return 100 + len(positions[0])
             elif len(positions[1]) > 28:
-                return -100
+                return -100 -  len(positions[1])
             score = len(positions[0]) - len(positions[1])
             return score
 

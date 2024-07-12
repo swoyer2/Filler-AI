@@ -14,6 +14,8 @@ boardSize = 8
 cellSize = 50
 padding = 200
 buttonSize = 60
+score1 = 1
+score2 = 1
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
     (242, 39, 113),
@@ -43,15 +45,13 @@ player2.color = gameBoard.board[0][boardSize - 1]
 
 # Function to draw the board
 def draw_board():
-    global score1
-    global score2
     for row in range(boardSize-1):
         for col in range(boardSize):
             color = colors[gameBoard.board[row][col]]
             pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
     GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
-    GAME_FONT.render_to(screen, (480, 50), str(score1), colors[gameBoard.board[0][7]])
+    GAME_FONT.render_to(screen, (480, 50), str(score2), colors[gameBoard.board[0][7]])
 
 # Draw buttons
 buttonArray = ButtonArray(
@@ -102,8 +102,6 @@ def handle_player_input(playerInput):
 # Main game loop
 running = True
 while running:
-    score1 = 1
-    score2 = 1
     screen.fill((255, 255, 255))
     draw_board()
     events = pygame.event.get()
