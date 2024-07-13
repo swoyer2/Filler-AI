@@ -16,7 +16,14 @@ class Board:
         return self.board
     
     def setColor(self, pos):
-        self.board[pos[0]][pos[1]] = choice(self.checkAvailable(pos))
+        if pos == (6, 0):
+            try:
+                toRemove = self.checkAvailable(pos).remove(self.board[0][7])
+                self.board[pos[0]][pos[1]] = choice(toRemove)
+            except:
+                self.board[pos[0]][pos[1]] = choice(self.checkAvailable(pos))
+        else:
+            self.board[pos[0]][pos[1]] = choice(self.checkAvailable(pos))
     
     def checkAvailable(self, pos):
         availableColors = [0, 1, 2, 3, 4, 5]

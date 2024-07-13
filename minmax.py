@@ -10,7 +10,10 @@ class MinMax:
     def getAvailableMoves(self, color1, color2):
         moves = [0, 1, 2, 3, 4, 5]
         moves.remove(color1)
-        moves.remove(color2)
+        try:
+            moves.remove(color2)
+        except:
+            pass
         return moves
 
     def findPlayerPositions(self, board):
