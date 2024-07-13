@@ -55,16 +55,15 @@ class MinMax:
                 for pos in positions[1]:
                     board[pos[0]][pos[1]] = color
 
-        # Early exit conditions
-        if player1:
-            positions = self.findPlayerPositions(board)
-            if len(positions[0]) > 28:
-                return 100 + len(positions[0])
-            elif len(positions[1]) > 28:
-                return -100 - len(positions[1])
+        # # Early exit conditions
+        # positions = self.findPlayerPositions(board)
+        # if len(positions[0]) > 28:
+        #     return 100 + len(positions[0])
+        # elif len(positions[1]) > 28:
+        #     return -100 - len(positions[1])
 
-            score = len(positions[0]) - len(positions[1])
-            return score
+        score = len(positions[0]) - len(positions[1])
+        return score
 
     def generateTree(self, board, maxDepth, depth, a, b, maximizing_player):
         if depth == maxDepth:
@@ -83,8 +82,6 @@ class MinMax:
             _, eval, path = self.generateTree(child_node, maxDepth, depth + 1, a, b, not maximizing_player)
 
             if maximizing_player:
-                if best_eval >= 100:  # Early exit condition
-                    break
                 if eval > best_eval:
                     best_eval = eval
                     best_path = child_node
@@ -102,9 +99,9 @@ class MinMax:
 
         return best_path, best_eval, best_path_colors
 
-    def evaluate_tree(self, board, maxDepth):
+    def evaluate_tree(self, board, maxDepth, isPlayer1):
         root = AnyNode(name="Root", colors=[board.board[6][0], board.board[0][7]])
-        best_path, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, float('-inf'), float('inf'), True)
+        best_path, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, float('-inf'), float('inf'), isPlayer1)
         return best_path_colors, best_score
 
 

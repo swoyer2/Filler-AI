@@ -5,6 +5,7 @@ import minmax
 import pygame_widgets
 from pygame_widgets.button import ButtonArray
 import pygame.freetype
+import copy
 
 # Initialize Pygame
 pygame.init()
@@ -18,6 +19,8 @@ score1 = 1
 score2 = 1
 evalScore = 0
 selection = [0, 0]
+auto = True
+tally = [0, 0, 0] # Player1, Player2, Tie
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
     (242, 39, 113),
@@ -103,7 +106,7 @@ def handle_player_input(playerInput):
         player1.addPositionsWithColor(gameBoard, playerInput)
 
         minMaxClass = minmax.MinMax(gameBoard)
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 12)
+        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 0)
 
         print(best_path_colors[0][2:])
         print(best_score)
@@ -116,12 +119,53 @@ def handle_player_input(playerInput):
         score2 = str(len(player2.positionsControlled))
     else:
         print("Choose a valid color")
+    
+def handle_auto():
+    global score1
+    global score2
+    global evalScore
+    global tally
+    minMaxClass = minmax.MinMax(gameBoard)
+    best_path_colors1, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 0)
+    player1.addPositionsWithColor(gameBoard, best_path_colors1[0][2])
+
+    draw_board()
+    pygame.display.flip()
+
+    best_path_colors2, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 1)
+    player2.addPositionsWithColor(gameBoard, best_path_colors2[0][2])
+    evalScore = best_score
+
+    positions = minMaxClass.findPlayerPositions(gameBoard.board)
+    if len(positions[0]) > 23:
+        tally[0] += 1
+        restart()
+    elif len(positions[1]) > 23:
+        tally[1] += 1
+        restart()
+    elif len(positions[1]) == 23:
+        tally[2] += 1
+        restart()
+
+def restart():
+    global gameBoard
+    global player1
+    global player2
+    print(tally)
+    gameBoard = Board(boardSize)
+    gameBoard.buildBoard()
+
+    player1 = Player((boardSize - 2, 0))
+    player2 = Player((0, boardSize - 1))
+
+    player1.color = gameBoard.board[boardSize - 2][0]
+    player2.color = gameBoard.board[0][boardSize - 1]
 
 
 # Main game loop
 editing = False
 running = True
-while running:
+while running and not auto:
     screen.fill((255, 255, 255))
     draw_board()
     events = pygame.event.get()
@@ -155,6 +199,13 @@ while running:
                 else:
                     playerInput = event.key - pygame.K_0
                     handle_player_input(playerInput)
+
+    pygame.display.flip()
+
+while running and auto:
+    handle_auto()
+    screen.fill((255, 255, 255))
+    draw_board()
 
     pygame.display.flip()
 pygame.quit()
