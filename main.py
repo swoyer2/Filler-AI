@@ -19,7 +19,7 @@ score1 = 1
 score2 = 1
 evalScore = 0
 selection = [0, 0]
-auto = True
+auto = False
 tally = [0, 0, 0] # Player1, Player2, Tie
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
@@ -59,9 +59,9 @@ def draw_board():
             else:
                 pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
-    # Score
-    GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
-    GAME_FONT.render_to(screen, (480, 50), str(score2), colors[gameBoard.board[0][7]])
+    # # Score
+    # GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
+    # GAME_FONT.render_to(screen, (480, 50), str(score2), colors[gameBoard.board[0][7]])
 
     # Eval bar
     pygame.draw.rect(screen, colors[gameBoard.board[6][0]], (20, 150, 50, 450))
@@ -126,7 +126,7 @@ def handle_auto():
     global evalScore
     global tally
     minMaxClass = minmax.MinMax(gameBoard)
-    best_path_colors1, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 0)
+    best_path_colors1, best_score = minMaxClass.evaluate_tree(gameBoard, 4, 0)
     player1.addPositionsWithColor(gameBoard, best_path_colors1[0][2])
 
     draw_board()
@@ -143,7 +143,7 @@ def handle_auto():
     elif len(positions[1]) > 23:
         tally[1] += 1
         restart()
-    elif len(positions[1]) == 23:
+    elif len(positions[1]) == 23 and len(positions[0]) == 23:
         tally[2] += 1
         restart()
 
