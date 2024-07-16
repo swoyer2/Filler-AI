@@ -58,12 +58,12 @@ class MinMax:
                 for pos in positions[1]:
                     board[pos[0]][pos[1]] = color
 
-        # # Early exit conditions
-        # positions = self.findPlayerPositions(board)
-        # if len(positions[0]) > 28:
-        #     return 100 + len(positions[0])
-        # elif len(positions[1]) > 28:
-        #     return -100 - len(positions[1])
+        # Early exit conditions
+        positions = self.findPlayerPositions(board)
+        if len(positions[0]) > 28:
+            return 100 + len(positions[0])
+        elif len(positions[1]) > 28:
+            return -100 - len(positions[1])
 
         score = len(positions[0]) - len(positions[1])
         return score

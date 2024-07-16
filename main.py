@@ -104,9 +104,13 @@ def handle_player_input(playerInput):
     playerInput -= 1
     if playerInput != gameBoard.board[0][7] and playerInput != gameBoard.board[6][0]:
         player1.addPositionsWithColor(gameBoard, playerInput)
+        
+        draw_board()
+        pygame.display.flip()
+
 
         minMaxClass = minmax.MinMax(gameBoard)
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 0)
+        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, 10, 1)
 
         print(best_path_colors[0][2:])
         print(best_score)
@@ -126,13 +130,13 @@ def handle_auto():
     global evalScore
     global tally
     minMaxClass = minmax.MinMax(gameBoard)
-    best_path_colors1, best_score = minMaxClass.evaluate_tree(gameBoard, 4, 0)
+    best_path_colors1, best_score = minMaxClass.evaluate_tree(gameBoard, 6, 0)
     player1.addPositionsWithColor(gameBoard, best_path_colors1[0][2])
 
     draw_board()
     pygame.display.flip()
 
-    best_path_colors2, best_score = minMaxClass.evaluate_tree(gameBoard, 8, 1)
+    best_path_colors2, best_score = minMaxClass.evaluate_tree(gameBoard, 12, 1)
     player2.addPositionsWithColor(gameBoard, best_path_colors2[0][2])
     evalScore = best_score
 
