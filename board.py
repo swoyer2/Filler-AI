@@ -35,7 +35,7 @@ class Board:
         if pos[1] > 0:
             colorsToRemove.add(self.board[pos[0]][pos[1] - 1])
 
-        output = [ele for ele in availableColors if ele not in colorsToRemove]
+        output: list[int] = [ele for ele in availableColors if ele not in colorsToRemove]
 
         return output
 

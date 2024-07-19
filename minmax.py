@@ -49,7 +49,7 @@ class MinMax:
         return helper(player1), helper(player2)
 
     # This will convery all player positions to the color selected
-    def simulate(self, colors, player1 : bool, origBoard : Board) -> int:
+    def simulate(self, colors : list[int], player1 : bool, origBoard : Board) -> int:
         board = origBoard.getBoardCopy()
         for color in colors[2:]:
             positions = self.findPlayerPositions(board)
@@ -69,22 +69,21 @@ class MinMax:
         elif len(positions[1]) > 28:
             return -100 - len(positions[1])
 
-        score = len(positions[0]) - len(positions[1])
-        return score
+        return len(positions[0]) - len(positions[1])
 
-    def generateTree(self, board: AnyNode, maxDepth : int, depth : int, a: int | float, b: int | float, maximizing_player: bool) -> tuple[AnyNode | None, int | float, Any]:
+    def generateTree(self, node: AnyNode, maxDepth : int, depth : int, a: int | float, b: int | float, maximizing_player: bool) -> tuple[AnyNode | None, int | float, Any]:
         if depth == maxDepth:
-            return None, self.simulate(board.colors, maximizing_player, self.gameBoard), [board.colors]
+            return None, self.simulate(node.colors, maximizing_player, self.gameBoard), [node.colors]
 
-        best_path = None
+        best_child = None
         best_eval: int | float = float('-inf') if maximizing_player else float('inf')
         best_path_colors = None
 
         # Branch off for each of the four moves
-        for move in self.getAvailableMoves(board.colors[-2], board.colors[-1]):
-            newColors = board.colors.copy()
+        for move in self.getAvailableMoves(node.colors[-2], node.colors[-1]):
+            newColors = node.colors.copy()
             newColors.append(move)
-            child_node: AnyNode = AnyNode(name=f"{board.name}{move}", parent=board, colors=newColors)
+            child_node: AnyNode = AnyNode(name=f"{node.name}{move}", parent=node, colors=newColors)
 
             # Evaluate the child node using Minimax
             _, eval, path = self.generateTree(child_node, maxDepth, depth + 1, a, b, not maximizing_player)
@@ -92,20 +91,20 @@ class MinMax:
             if maximizing_player:
                 if eval > best_eval:
                     best_eval = eval
-                    best_path = child_node
+                    best_child = child_node
                     best_path_colors = path + [child_node.colors]
                     a = max(a, eval)
             else:
                 if eval < best_eval:
                     best_eval = eval
-                    best_path = child_node
+                    best_child = child_node
                     best_path_colors = path + [child_node.colors]
                     b = min(b, eval)
 
             if b <= a:
                 break  # Alpha-beta pruning
 
-        return best_path, best_eval, best_path_colors
+        return best_child, best_eval, best_path_colors
 
     def evaluate_tree(self, board : Board, maxDepth : int, isPlayer1):
         root: AnyNode = AnyNode(name="Root", colors=[board.board[6][0], board.board[0][7]])

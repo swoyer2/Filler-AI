@@ -51,7 +51,7 @@ player1.color = gameBoard.board[boardSize - 2][0]
 player2.color = gameBoard.board[0][boardSize - 1]
 
 # Function to draw the board
-def draw_board():
+def draw_board() -> None:
     for row in range(boardSize-1):
         for col in range(boardSize):
             color = colors[gameBoard.board[row][col]]
@@ -73,7 +73,7 @@ def draw_board():
         pygame.draw.rect(screen, colors[gameBoard.board[0][7]], (20, 150, 50, 0))
     else:
         pygame.draw.rect(screen, colors[gameBoard.board[0][7]], (20, 150, 50, 225+22.5*evalScore))
-    
+
 
 # Draw buttons
 buttonArray = ButtonArray(
@@ -97,14 +97,14 @@ buttonArray = ButtonArray(
 
 
 # Function to handle player input
-def handle_player_input(playerInput):
+def handle_player_input(playerInput) -> None:
     global score1
     global score2
     global evalScore
     playerInput -= 1
     if playerInput != gameBoard.board[0][7] and playerInput != gameBoard.board[6][0]:
         player1.addPositionsWithColor(gameBoard, playerInput)
-        
+
         draw_board()
         pygame.display.flip()
 
@@ -123,8 +123,8 @@ def handle_player_input(playerInput):
         score2 = str(len(player2.positionsControlled))
     else:
         print("Choose a valid color")
-    
-def handle_auto():
+
+def handle_auto() -> None:
     global score1
     global score2
     global evalScore
@@ -151,7 +151,7 @@ def handle_auto():
         tally[2] += 1
         restart()
 
-def restart():
+def restart() -> None:
     global gameBoard
     global player1
     global player2
