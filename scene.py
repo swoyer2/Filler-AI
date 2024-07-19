@@ -1,24 +1,6 @@
 from manim import *
 
-class Something(Scene):
-    def construct(self):
-        circle = Circle()
-        self.play(Create(circle))
-        self.wait(2)
-        square = Square()
-        self.play(Transform(circle, square), run_time=2)
-        self.play(ApplyMethod(circle.shift,UP))
-        self.play(ApplyMethod(circle.rotate,0.3))
-        self.play(ApplyMethod(circle.scale,2))
-
-class Counting(Scene):
-    def construct(self):
-        number = Text("0")
-        self.play(Write(number))
-        for i in range(10):
-            self.play(Transform(number, Text(str(i))))
-
-import networkx as nx
+# Just for the video, its the tree portion and uses manim :)
 
 class Tree(MovingCameraScene):
     def construct(self):

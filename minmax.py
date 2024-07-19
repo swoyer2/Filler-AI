@@ -10,12 +10,14 @@ class MinMax:
     def getAvailableMoves(self, color1, color2):
         moves = [0, 1, 2, 3, 4, 5]
         moves.remove(color1)
+        # Sometimes the board generates with both players starting the same color
         try:
             moves.remove(color2)
         except:
             pass
         return moves
 
+    # Checks each neighbor of the player starting from the corner, if same color then it gets added to the list
     def findPlayerPositions(self, board):
         player1 = set([(0, 7)])
         player2 = set([(6, 0)])
@@ -45,6 +47,7 @@ class MinMax:
 
         return helper(player1), helper(player2)
 
+    # This will convery all player positions to the color selected
     def simulate(self, colors, player1, origBoard):
         board = origBoard.getBoardCopy()
         for color in colors[2:]:
@@ -58,7 +61,7 @@ class MinMax:
                 for pos in positions[1]:
                     board[pos[0]][pos[1]] = color
 
-        # Early exit conditions
+        # If position is winning give it a greater value (Or lesser if its the opponent)
         positions = self.findPlayerPositions(board)
         if len(positions[0]) > 28:
             return 100 + len(positions[0])
@@ -76,6 +79,7 @@ class MinMax:
         best_eval = float('-inf') if maximizing_player else float('inf')
         best_path_colors = None
 
+        # Branch off for each of the four moves
         for move in self.getAvailableMoves(board.colors[-2], board.colors[-1]):
             newColors = board.colors.copy()
             newColors.append(move)

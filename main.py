@@ -5,12 +5,12 @@ import minmax
 import pygame_widgets
 from pygame_widgets.button import ButtonArray
 import pygame.freetype
-import copy
 
-# Initialize Pygame
 pygame.init()
 
-# Constants
+# Toggle if you want the bots to fight each other
+auto = False
+
 boardSize = 8
 cellSize = 50
 padding = 200
@@ -19,7 +19,6 @@ score1 = 1
 score2 = 1
 evalScore = 0
 selection = [0, 0]
-auto = False
 tally = [0, 0, 0] # Player1, Player2, Tie
 windowSize = boardSize * cellSize + 2 * padding
 colors = [
@@ -59,7 +58,7 @@ def draw_board():
             else:
                 pygame.draw.rect(screen, color, (col * cellSize + padding, row * cellSize + padding, cellSize, cellSize))
 
-    # # Score
+    # # Score - Was not working, always 1 move behind, do not care to fix lol
     # GAME_FONT.render_to(screen, (300, 50), str(score1), colors[gameBoard.board[6][0]])
     # GAME_FONT.render_to(screen, (480, 50), str(score2), colors[gameBoard.board[0][7]])
 
@@ -75,18 +74,16 @@ def draw_board():
 
 # Draw buttons
 buttonArray = ButtonArray(
-    # Mandatory Parameters
     screen,  # Surface to place button array on
     220,  # X-coordinate
     650,  # Y-coordinate
     buttonSize * 6,  # Width
     buttonSize,  # Height
-    (6, 1),  # Shape: 2 buttons wide, 2 buttons tall
+    (6, 1),  # Shape: 6 buttons wide, 1 buttons tall
     border=5,  # Distance between buttons and edge of array
-    texts=('1', '2', '3', '4', '5', '6'),  # Sets the texts of each button (counts left to right then top to bottom)
+    texts=('1', '2', '3', '4', '5', '6'),  # Sets the texts of each button
     inactiveColours=(colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]),
     colour = (255, 255, 255),
-    # When clicked, print number
     onClicks=(lambda: handle_player_input(1),
               lambda: handle_player_input(2),
               lambda: handle_player_input(3),
