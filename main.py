@@ -11,7 +11,7 @@ pygame.init()
 # Toggle if you want the bots to fight each other
 auto = False
 
-# AI depth
+# AI depth, can change to even numbers (odd numbers break it and idk or care to know why)
 DEPTH = 10
 
 boardSize = 8
