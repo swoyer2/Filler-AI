@@ -20,7 +20,7 @@ class Player:
                         self.positionsControlled.append(ele)
         return self.positionsControlled
 
-    def addPositionsWithColor(self, board: Board, color) -> Board:
+    def addPositionsWithColor(self, board: Board, color: int) -> Board:
         for pos in self.findPlayerPositions(board):
             board.board[pos[0]][pos[1]] = color
 

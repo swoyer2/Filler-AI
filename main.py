@@ -9,22 +9,22 @@ import pygame.freetype
 pygame.init()
 
 # Toggle if you want the bots to fight each other
-auto = False
+auto: bool = False
 
 # AI depth, can change to even numbers (odd numbers break it and idk or care to know why)
-DEPTH = 10
+DEPTH: int = 10
 
-boardSize = 8
-cellSize = 50
-padding = 200
-buttonSize = 60
-score1 = 1
-score2 = 1
-evalScore = 0
-selection = [0, 0]
-tally = [0, 0, 0] # Player1, Player2, Tie
-windowSize = boardSize * cellSize + 2 * padding
-colors = [
+boardSize: int = 8
+cellSize: int = 50
+padding: int = 200
+buttonSize: int = 60
+score1: int = 1
+score2: int = 1
+evalScore: int = 0
+selection: list[int] = [0, 0]
+tally: list[int] = [0, 0, 0] # Player1, Player2, Tie
+windowSize: int = boardSize * cellSize + 2 * padding
+colors: list[tuple[int, int, int]] = [
     (242, 39, 113),
     (100, 70, 166),
     (68, 193, 242),
@@ -41,11 +41,11 @@ screen = pygame.display.set_mode((windowSize, windowSize))
 pygame.display.set_caption("Filler Engine")
 
 # Initialize the game board and players
-gameBoard = Board(boardSize)
+gameBoard: Board = Board(boardSize)
 gameBoard.buildBoard()
 
-player1 = Player((boardSize - 2, 0))
-player2 = Player((0, boardSize - 1))
+player1: Player = Player((boardSize - 2, 0))
+player2: Player = Player((0, boardSize - 1))
 
 player1.color = gameBoard.board[boardSize - 2][0]
 player2.color = gameBoard.board[0][boardSize - 1]
@@ -119,8 +119,8 @@ def handle_player_input(playerInput) -> None:
         player2.addPositionsWithColor(gameBoard, best_path_colors[0][2])
 
         print("Player1: ", len(player1.positionsControlled), " Player2: ", len(player2.positionsControlled))
-        score1 = str(len(player1.positionsControlled))
-        score2 = str(len(player2.positionsControlled))
+        score1 = len(player1.positionsControlled)
+        score2 = len(player2.positionsControlled)
     else:
         print("Choose a valid color")
 
@@ -167,8 +167,8 @@ def restart() -> None:
 
 
 # Main game loop
-editing = False
-running = True
+editing: bool = False
+running: bool = True
 while running and not auto:
     screen.fill((255, 255, 255))
     draw_board()
