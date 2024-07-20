@@ -181,10 +181,7 @@ while running and not auto:
             if event.key == pygame.K_x:
                 running = False
             elif event.key == pygame.K_e:
-                if editing:
-                    editing = False
-                else:
-                    editing = True
+                editing = not editing
             elif event.key == pygame.K_LEFT and editing:
                 if selection[0] > 0:
                     selection[0] -= 1
