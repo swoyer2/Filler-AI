@@ -96,15 +96,22 @@ class MinMax:
                     best_child = child_node
                     best_path_colors = path + [child_node.colors]
                     a = max(a, eval)
+                    if(a >= b):
+                        break
             else:
                 if eval < best_eval:
                     best_eval = eval
                     best_child = child_node
                     best_path_colors = path + [child_node.colors]
                     b = min(b, eval)
+                    if(b >= a):
+                        break
 
-            if b <= a:
-                break  # Alpha-beta pruning
+            #in theory this should be faster but its not for some reason?????? i have no clue why
+            #if b <= a:
+            #    print("branch pruned! maxxingplayer: " + str(maximizing_player))
+            #    print("depth: " + str(depth))
+            #    break  # Alpha-beta pruning
 
         return best_child, best_eval, best_path_colors
 
