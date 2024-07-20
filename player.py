@@ -1,14 +1,13 @@
-import copy
-from collections import defaultdict
+from board import Board
 
 class Player:
-    def __init__(self, startingPos) -> None:
-        self.positionsControlled = [startingPos]
-        self.touching = []
-        self.color = None
-    
-    def findPlayerPositions(self, board):
-        toCheck = []
+    def __init__(self, startingPos: tuple[int, int]) -> None:
+        self.positionsControlled: list[tuple[int, int]] = [startingPos]
+        self.touching: list[tuple[int, int]] = []
+        self.color: int | None = None
+
+    def findPlayerPositions(self, board: Board) -> list[tuple[int, int]]:
+        toCheck: list[tuple[int, int]] = []
         for i in range(len(board.board[0])-1):
             for j in range(len(board.board[0])):
                 if board.board[i][j] == board.board[self.positionsControlled[0][0]][self.positionsControlled[0][1]]:
@@ -21,13 +20,13 @@ class Player:
                         self.positionsControlled.append(ele)
         return self.positionsControlled
 
-    def addPositionsWithColor(self, board, color):
+    def addPositionsWithColor(self, board: Board, color: int) -> Board:
         for pos in self.findPlayerPositions(board):
             board.board[pos[0]][pos[1]] = color
-        
+
         return board
 
-    def findTouching(self, boardSize):
+    def findTouching(self, boardSize: int) -> None:
         for pos in self.positionsControlled:
             if pos[0] > 0:
                 self.touching.append((pos[0]-1, pos[1]))
@@ -38,5 +37,5 @@ class Player:
             if pos[1] < boardSize - 1:
                 self.touching.append((pos[0], pos[1] + 1))
 
-    def getScore(self):
+    def getScore(self) -> int:
         return len(self.positionsControlled)

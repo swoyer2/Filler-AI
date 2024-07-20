@@ -4,7 +4,7 @@ from manim import *
 
 class Tree(MovingCameraScene):
     def construct(self):
-        
+
         square = Square()
         self.play(Create(square))
         self.wait(2)
@@ -120,7 +120,7 @@ class Tree(MovingCameraScene):
         toWrite[8].set_color(WHITE)
         toWrite[12].set_color(WHITE)
         self.play(Indicate(max2))
-        
+
 
         self.play(self.camera.frame.animate.set(width=25).move_to(toWrite[4]))
         self.wait(3)
@@ -136,7 +136,7 @@ class Tree(MovingCameraScene):
         arrow2 = Arrow(start= UP*1.8, end=LEFT*2).shift(DOWN*1.4, LEFT*2.5).set_color(YELLOW)
         self.play(GrowArrow(arrow1))
         self.play(GrowArrow(arrow2))
-        
+
         self.wait(3)
 
 
