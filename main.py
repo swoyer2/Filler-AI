@@ -109,8 +109,8 @@ def handle_player_input(playerInput) -> None:
         pygame.display.flip()
 
 
-        minMaxClass = minmax.MinMax(gameBoard)
-        best_path_colors, best_score = minMaxClass.evaluate_tree(gameBoard, DEPTH, 1)
+        searcher = minmax.MinMax(gameBoard)
+        best_path_colors, best_score = searcher.evaluate_tree(gameBoard, DEPTH, 1)
 
         print(best_path_colors[0][2:])
         print(best_score)
