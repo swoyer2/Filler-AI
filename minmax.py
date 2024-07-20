@@ -50,16 +50,17 @@ class MinMax:
         return helper(player1), helper(player2)
 
     # This will convery all player positions to the color selected
-    def simulate(self, colors : list[int], player1 : bool, origBoard : Board) -> int:
+    def simulate(self, colors : list[int], origBoard : Board) -> int:
         board = origBoard.getBoardCopy()
+        perspective = True
         for color in colors[2:]:
             positions = self.findPlayerPositions(board)
-            if player1:
-                player1 = False
+            if perspective:
+                perspective = False
                 for pos in positions[0]:
                     board[pos[0]][pos[1]] = color
             else:
-                player1 = True
+                perspective = True
                 for pos in positions[1]:
                     board[pos[0]][pos[1]] = color
 
@@ -74,7 +75,7 @@ class MinMax:
 
     def generateTree(self, node: AnyNode, maxDepth : int, depth : int, a: int, b: int, maximizing_player: bool) -> tuple[AnyNode | None, int, list[list[int]] | None]:
         if depth == maxDepth:
-            return None, self.simulate(node.colors, maximizing_player, self.gameBoard), [node.colors]
+            return None, self.simulate(node.colors, self.gameBoard), [node.colors]
 
         best_child = None
         best_eval: int = -self.INFINITY if maximizing_player else self.INFINITY
