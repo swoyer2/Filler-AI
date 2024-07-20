@@ -1,6 +1,5 @@
 from board import Board
 from anytree import Node as AnyNode
-from typing import Any
 import cProfile
 
 
@@ -71,13 +70,13 @@ class MinMax:
 
         return len(positions[0]) - len(positions[1])
 
-    def generateTree(self, node: AnyNode, maxDepth : int, depth : int, a: int | float, b: int | float, maximizing_player: bool) -> tuple[AnyNode | None, int | float, Any]:
+    def generateTree(self, node: AnyNode, maxDepth : int, depth : int, a: int | float, b: int | float, maximizing_player: bool) -> tuple[AnyNode | None, int | float, list[list[int]] | None]:
         if depth == maxDepth:
             return None, self.simulate(node.colors, maximizing_player, self.gameBoard), [node.colors]
 
         best_child = None
         best_eval: int | float = float('-inf') if maximizing_player else float('inf')
-        best_path_colors = None
+        best_path_colors: list[list[int]] | None = None
 
         # Branch off for each of the four moves
         for move in self.getAvailableMoves(node.colors[-2], node.colors[-1]):
@@ -106,7 +105,7 @@ class MinMax:
 
         return best_child, best_eval, best_path_colors
 
-    def evaluate_tree(self, board : Board, maxDepth : int, isPlayer1):
+    def evaluate_tree(self, board : Board, maxDepth : int, isPlayer1) -> tuple[list[list[int]] | None, int | float]:
         root: AnyNode = AnyNode(name="Root", colors=[board.board[6][0], board.board[0][7]])
         best_path, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, float('-inf'), float('inf'), isPlayer1)
         return best_path_colors, best_score
