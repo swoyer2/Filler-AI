@@ -50,7 +50,7 @@ class MinMax:
         return helper(player1), helper(player2)
 
     # This will convery all player positions to the color selected
-    def simulate(self, colors : list[int], origBoard : Board) -> int:
+    def simulate(self, colors : list[int], isPlayer1: bool, origBoard : Board) -> int:
         board = origBoard.getBoardCopy()
         perspective = True
         for color in colors[2:]:
@@ -66,19 +66,27 @@ class MinMax:
 
         # If position is winning give it a greater value (Or lesser if its the opponent)
         positions: tuple[list[tuple[int, int]], list[tuple[int, int]]] = self.findPlayerPositions(board)
+        eval: int = 0
+
         if len(positions[0]) > 28:
-            return 100 + len(positions[0])
+            eval = 100 + len(positions[0])
+
         elif len(positions[1]) > 28:
-            return -100 - len(positions[1])
+            eval = -100 - len(positions[1])
 
-        return len(positions[0]) - len(positions[1])
+        else:
+            eval = len(positions[0]) - len(positions[1])
 
-    def generateTree(self, node: AnyNode, maxDepth : int, depth : int, a: int, b: int, maximizing_player: bool) -> tuple[AnyNode | None, int, list[list[int]] | None]:
-        if depth == maxDepth:
-            return None, self.simulate(node.colors, self.gameBoard), [node.colors]
+        if not isPlayer1:
+            eval = -eval
 
-        best_child = None
-        best_eval: int = -self.INFINITY if maximizing_player else self.INFINITY
+        return eval
+
+    def generateTree(self, node: AnyNode, depth : int, a: int, b: int, isPlayer1: bool) -> tuple[int, list[list[int]] | None]:
+        if depth == 0:
+            return self.simulate(node.colors, isPlayer1, self.gameBoard), [node.colors]
+
+        best_eval: int = -self.INFINITY
         best_path_colors: list[list[int]] | None = None
 
         # Branch off for each of the four moves
@@ -88,36 +96,21 @@ class MinMax:
             child_node: AnyNode = AnyNode(name=f"{node.name}{move}", parent=node, colors=newColors)
 
             # Evaluate the child node using Minimax
-            _, eval, path = self.generateTree(child_node, maxDepth, depth + 1, a, b, not maximizing_player)
+            eval, path = self.generateTree(child_node, depth - 1, -b, -a, not isPlayer1)
+            eval = -eval
 
-            if maximizing_player:
-                if eval > best_eval:
-                    best_eval = eval
-                    best_child = child_node
-                    best_path_colors = path + [child_node.colors]
-                    a = max(a, eval)
-                    if(a >= b):
-                        break
-            else:
-                if eval < best_eval:
-                    best_eval = eval
-                    best_child = child_node
-                    best_path_colors = path + [child_node.colors]
-                    b = min(b, eval)
-                    if(b >= a):
-                        break
+            if eval > best_eval:
+                best_eval = eval
+                best_path_colors = path + [child_node.colors]
+                a = max(a, eval)
+                if(a >= b):
+                    break
 
-            #in theory this should be faster but its not for some reason?????? i have no clue why
-            #if b <= a:
-            #    print("branch pruned! maxxingplayer: " + str(maximizing_player))
-            #    print("depth: " + str(depth))
-            #    break  # Alpha-beta pruning
-
-        return best_child, best_eval, best_path_colors
+        return best_eval, best_path_colors
 
     def evaluate_tree(self, board : Board, maxDepth : int, isPlayer1) -> tuple[list[list[int]], int]:
         root: AnyNode = AnyNode(name="Root", colors=[board.board[6][0], board.board[0][7]])
-        _, best_score, best_path_colors = self.generateTree(root, maxDepth, 0, -self.INFINITY, self.INFINITY, isPlayer1)
+        best_score, best_path_colors = self.generateTree(root, maxDepth, -self.INFINITY, self.INFINITY, isPlayer1)
         assert best_path_colors is not None
         return best_path_colors, best_score
 
